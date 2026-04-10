@@ -5,7 +5,7 @@ import { ENV } from "../lib/env.js";
 
 const router = express.Router();
 
-router.post("/clerk", async (req, res) => {
+router.post("/clerk", express.raw({ type: "application/json" }), async (req, res) => {
   const payload = req.body;
   const headers = req.headers;
 
@@ -16,6 +16,7 @@ router.post("/clerk", async (req, res) => {
   try {
     evt = wh.verify(payload, headers);
   } catch (err) {
+    console.error("[Webhook] Svix verification failed:", err.message);
     return res.status(400).send("Invalid webhook");
   }
 
